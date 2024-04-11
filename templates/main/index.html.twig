@@ -1,0 +1,164 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bienvenue sur TodoApp! ✅{% endblock %}
+
+{% block body %}
+
+<section class="page-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="mt-3">Bienvenue sur TodoApp! ✅</h2>
+                </div>
+            </div>
+        </div>
+</section>
+
+<section class="page-section">
+    <div class="container " >
+        <div class="row ">
+            <div>   
+            <button class="btn btn-primary col-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Mes tâches</button>
+            </div>
+        <div  style="width: 30em; background-color:  #86db89" class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+        <div class="offcanvas-header ">
+            <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Liste de tâches</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="col-">
+                <h2 class="section-heading">Tâches faites</h2>
+                <div class="table-responsive border rounded bg-light bg-opacity-25 mb-4 ">
+                    <table class="table table-bordered mb-0">
+                        <thead>
+                            <tr class="table-light">
+                                <th scope="col">Description</th>
+                                <th scope="col">Statut</th>
+                                <th scope="col">Priorité</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in tasksFait %}
+                            <tr>
+                                <td>{{ task.description }}</td>
+                                <td>{{ task.priority }} </td>
+                                <td>{{ task.statut }}</td>
+                                <td>
+                                    <form action="{{ path('delete_task', {'id': task.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?');" class="action-form">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete_task' ~ task.id) }}">
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <h2 class="section-heading">Tâches en cours</h2>
+                <div class="table-responsive border rounded bg-opacity-25 bg-light mb-4">
+                    <table class="table table-bordered mb-0">
+                        <thead>
+                            <tr class="table-light">
+                                <th scope="col">Description</th>
+                                <th scope="col">Statut</th>
+                                <th scope="col">Priorité</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in tasksEncours %}
+                            <tr>
+                                <td>{{ task.description }}</td>
+                                <td>{{ task.priority }}</td>
+                                <td>{{ task.statut }}</td>
+                                <td>
+                                   <form action="{{ path('delete_task', {'id': task.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?');" class="action-form">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete_task' ~ task.id) }}">
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+          </div>
+
+     <div class="container col-offset-2 "> 
+        <div class="offset-lg-4 col-lg-8 ml-auto">
+                <h2 class="section-heading ">Liste des tâches</h2>
+                <div class="table-responsive border rounded bg-opacity-25 bg-light ">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col">Description</th>
+                                <th scope="col">Statut</th>
+                                <th scope="col">Priorité</th>
+                                <th scope="col">Etiquette</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                         {% for task in tasks %}
+                                {% if task.statut != 'Fait' %}
+                                    <form action="{{ path('modify_task', {'id': task.id}) }}" method="post">
+                                        <tr>
+                                            <td>
+                                                <input type="textarea" name="description" value="{{ task.description }}" class="form-control"></input>
+                                            </td>
+                                            <td>
+                                                <select name="statut" class="status-select" id="status-select-{{ task.id }}" style="height: 40px;">
+                                                    <option value="Pas commencé" {% if task.statut == 'Pas commencé' %}selected{% endif %}>Pas commencé</option>
+                                                    <option value="En cours" {% if task.statut == 'En cours' %}selected{% endif %}>En cours</option>
+                                                    <option value="Fait" {% if task.statut == 'Fait' %}selected{% endif %}>Fait</option>
+                                                    <option value="Annulée" {% if task.statut == 'Annulée' %}selected{% endif %}>Annulée</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select name="priority" class="priority-select form-control" id="priority-select-{{ task.id }}">
+                                                    <option value="Faible" {% if task.priority == 'Faible' %}selected{% endif %}>Faible</option>
+                                                    <option value="Moyenne" {% if task.priority == 'Moyenne' %}selected{% endif %}>Moyenne</option>
+                                                    <option value="Élevée" {% if task.priority == 'Élevée' %}selected{% endif %}>Élevée</option>
+                                                </select>
+                                            </td>
+                                            <td class="d-flex justify-content-center  etiquette {% if task.etiquette == 'Urgent' %}urgent{% elseif task.etiquette == 'Important' %}important{% elseif task.etiquette == 'Personnel' %}personnel{% elseif task.etiquette == 'Professionnel' %}professionnel{% elseif task.etiquette == 'Maison' %}maison{% endif %} m-1">
+                                                {{ task.etiquette }}
+                                                
+                                            </td>
+                                            <td>
+                                                <button type="submit" class="btn btn-primary"><i class="fas fa-edit"></i></button>
+                                                <input type="hidden" name="_token" value="{{ csrf_token('modify_task' ~ task.id) }}">
+                                            </td> 
+                                    </form>
+                                            <td>
+                                                <form action="{{ path('delete_task', {'id': task.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?');" class="action-form">
+                                                    <input type="hidden" name="_method" value="DELETE">
+                                                    <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_task' ~ task.id) }}">
+                                                </form>
+                                            </td>
+                                        </tr>
+                                  
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            <a href="{{ path('create_task')}}" class="btn btn-custom btn-secondary btn-lg m-3 ml-auto">Créer une tâche</a>  
+        </div>
+    </div>
+</section>
+
+
+<link rel="stylesheet" href="{{ asset('assets/css/style_index.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+<script src="https://kit.fontawesome.com/35faf2073b.js" crossorigin="anonymous"></script>
+    <script src="{{ asset('assets/js/script.js')}}" defer></script>
+
+
+{% endblock %}

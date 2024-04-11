@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bonjour !{% endblock %}
+
+{% block body %}
+    <section class="page-section">
+        <div class="container">
+            <div class="row">
+                <div class="offset-lg-2 col-lg-8">
+                    <h2 class="section-heading my-3">Créer une tâche</h2>
+                    <div class="table-responsive border bg-opacity-25 rounded bg-light my-3">
+                        <table class="table">
+                            {{ form_start(form) }}
+                                <td>{{ form_row(form.description) }}</td>
+                                <td>{{ form_row(form.statut) }}</td>
+                                <td>{{ form_row(form.priority) }}</td>
+                                <td>{{ form_row(form.etiquette) }}</td>
+                                {{form_widget(form._token) }}
+                                <td><button type="submit" class="btn btn-custom btn-secondary btn-lg mt-3">Créer</button></td>
+                            {{ form_end(form) }}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>    
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+
+    <link rel="stylesheet" href="{{ asset('assets/css/style_index.css') }}">
+{% endblock %}
